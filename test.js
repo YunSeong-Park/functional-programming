@@ -2,21 +2,26 @@
   const log = console.log 
 
 
-  function *filter(f, iter) {
+  const curry = f => (a, ...bs) => 
+    bs.length ? 
+      f(a, ...bs) 
+      : (...bs) => f(a, ...bs);
+
+  const filter= curry(function *(f, iter) {
     for (const a of iter){
       if (f(a)) {
         yield a;
       }
     }
-  }
+  })
 
-  function *map(f, iter) {
+  const map = curry(function *(f, iter) {
     for (const a of iter){
       yield f(a);
     }
-  }
+  })
 
-  function take(length, iter) {
+  const take = curry(function(length, iter) {
     let res = [];
     for (const a of iter) {
       res.push(a);
@@ -25,9 +30,9 @@
       }
     }
     return res
-  }
+  })
 
-  function reduce(f, acc, iter) {
+  const reduce = curry(function (f, acc, iter) {
     if (arguments.length === 2){
       iter = acc[Symbol.iterator]();
       acc = iter.next().value;
@@ -36,9 +41,9 @@
       acc = f(acc, a);
     }
     return acc;
-  }
+  })
 
-  const add = (a, b) => a + b;
+  const add = curry((a, b) => a + b);
 
   const go = (...as)=> reduce((a, f) => f(a), as);
 
@@ -54,10 +59,10 @@
 
   const f2 = (list, length) => go(
     list, 
-    list => filter(a => a %2, list) ,
-    list => map(a => a * a, list),
-    list => take(length, list),
-    list => reduce(add, 0, list)
+      filter(a => a %2),
+      map(a => a * a),
+      take(length),
+      reduce(add)
   )
 
   function main() {
