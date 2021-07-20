@@ -7,7 +7,16 @@
       f(a, ...bs) 
       : (...bs) => f(a, ...bs);
 
-  const filter= curry(function *(f, iter) {
+  const L = {};
+
+  L.range = function *(stop) {
+    let i = -1;
+    while (i++ < stop) {
+      yield i;
+    }
+  }
+
+  L.filter= curry(function *(f, iter) {
     for (const a of iter){
       if (f(a)) {
         yield a;
@@ -15,7 +24,7 @@
     }
   })
 
-  const map = curry(function *(f, iter) {
+  L.map = curry(function *(f, iter) {
     for (const a of iter){
       yield f(a);
     }
@@ -54,13 +63,13 @@
       add, 
       0, 
       take(length, 
-        map(a=> a*a ,
-          filter(a => a % 2, list))));
+        L.map(a=> a*a ,
+          L.filter(a => a % 2, list))));
 
   const f2 = (list, length) => go(
     list, 
-      filter(a => a %2),
-      map(a => a * a),
+      L.filter(a => a %2),
+      L.map(a => a * a),
       take(length),
       reduce(add)
   )
@@ -68,7 +77,7 @@
   function main() {
     log(f2([1, 2, 3, 4, 5], 1));
     log(f2([1, 2, 3, 4, 5], 2));
-    log(f2([1, 2, 3, 4, 5], 3));
+    log(f2(L.range(Infinity), 200));
   }
   main();
   
