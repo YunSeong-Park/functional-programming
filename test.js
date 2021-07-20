@@ -2,7 +2,7 @@
   const log = console.log 
 
 
-  function* filter(f, list:number[]) {
+  function* filter(f, list) {
     for (const a of list){
       if (f(a)) {
         yield a;
@@ -10,10 +10,10 @@
     }
   }
 
-  function f(list:number[], length:number) {
+  function f(list, length) {
     let i = 0;
     let acc = 0;
-    for (const a of filter((a: number) => a % 2, list)){
+    for (const a of filter((a) => a % 2, list)){
       acc = acc + a * a;
       if(++i === length){
         break
